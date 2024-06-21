@@ -1,0 +1,215 @@
+diff --git a/autoware_launch/config/control/trajectory_follower/longitudinal/pid.param.yaml b/autoware_launch/config/control/trajectory_follower/longitudinal/pid.param.yaml
+index 5f023e1..1e48299 100644
+--- a/autoware_launch/config/control/trajectory_follower/longitudinal/pid.param.yaml
++++ b/autoware_launch/config/control/trajectory_follower/longitudinal/pid.param.yaml
+@@ -6,7 +6,7 @@
+     enable_overshoot_emergency: true
+     enable_large_tracking_error_emergency: true
+     enable_slope_compensation: true
+-    enable_keep_stopped_until_steer_convergence: true
++    enable_keep_stopped_until_steer_convergence: false
+ 
+     # state transition
+     drive_state_stop_dist: 0.5
+diff --git a/autoware_launch/config/localization/ndt_scan_matcher/ndt_scan_matcher.param.yaml b/autoware_launch/config/localization/ndt_scan_matcher/ndt_scan_matcher.param.yaml
+index 241892e..9ce1d56 100644
+--- a/autoware_launch/config/localization/ndt_scan_matcher/ndt_scan_matcher.param.yaml
++++ b/autoware_launch/config/localization/ndt_scan_matcher/ndt_scan_matcher.param.yaml
+@@ -43,7 +43,7 @@
+ 
+     initial_pose_estimation:
+       # The number of particles to estimate initial pose
+-      particles_num: 200
++      particles_num: 20
+ 
+       # The number of initial random trials in the TPE (Tree-Structured Parzen Estimator).
+       # This value should be equal to or less than 'initial_estimate_particles_num' and more than 0.
+diff --git a/autoware_launch/config/planning/mission_planning/mission_planner/mission_planner.param.yaml b/autoware_launch/config/planning/mission_planning/mission_planner/mission_planner.param.yaml
+index 9b7dcff..21ca156 100644
+--- a/autoware_launch/config/planning/mission_planning/mission_planner/mission_planner.param.yaml
++++ b/autoware_launch/config/planning/mission_planning/mission_planner/mission_planner.param.yaml
+@@ -3,10 +3,10 @@
+     map_frame: map
+     arrival_check_angle_deg: 45.0
+     arrival_check_distance: 1.0
+-    arrival_check_duration: 1.0
++    arrival_check_duration: 0.1
+     goal_angle_threshold_deg: 45.0
+     enable_correct_goal_pose: false
+     reroute_time_threshold: 10.0
+     minimum_reroute_length: 30.0
+     consider_no_drivable_lanes: false # This flag is for considering no_drivable_lanes in planning or not.
+-    check_footprint_inside_lanes: true
++    check_footprint_inside_lanes: false
+diff --git a/autoware_launch/config/system/component_state_monitor/topics.yaml b/autoware_launch/config/system/component_state_monitor/topics.yaml
+index f056892..ba25917 100644
+--- a/autoware_launch/config/system/component_state_monitor/topics.yaml
++++ b/autoware_launch/config/system/component_state_monitor/topics.yaml
+@@ -63,44 +63,44 @@
+     error_rate: 1.0
+     timeout: 1.0
+ 
+-- module: perception
+-  mode: [online, logging_simulation]
+-  type: launch
+-  args:
+-    node_name_suffix: obstacle_segmentation_pointcloud
+-    topic: /perception/obstacle_segmentation/pointcloud
+-    topic_type: sensor_msgs/msg/PointCloud2
+-    best_effort: true
+-    transient_local: false
+-    warn_rate: 5.0
+-    error_rate: 1.0
+-    timeout: 1.0
++# - module: perception
++#   mode: [online, logging_simulation]
++#   type: launch
++#   args:
++#     node_name_suffix: obstacle_segmentation_pointcloud
++#     topic: /perception/obstacle_segmentation/pointcloud
++#     topic_type: sensor_msgs/msg/PointCloud2
++#     best_effort: true
++#     transient_local: false
++#     warn_rate: 5.0
++#     error_rate: 1.0
++#     timeout: 1.0
+ 
+-- module: perception
+-  mode: [online, logging_simulation, planning_simulation]
+-  type: autonomous
+-  args:
+-    node_name_suffix: object_recognition_objects
+-    topic: /perception/object_recognition/objects
+-    topic_type: autoware_auto_perception_msgs/msg/PredictedObjects
+-    best_effort: false
+-    transient_local: false
+-    warn_rate: 5.0
+-    error_rate: 1.0
+-    timeout: 1.0
++# - module: perception
++#   mode: [online, logging_simulation, planning_simulation]
++#   type: autonomous
++#   args:
++#     node_name_suffix: object_recognition_objects
++#     topic: /perception/object_recognition/objects
++#     topic_type: autoware_auto_perception_msgs/msg/PredictedObjects
++#     best_effort: false
++#     transient_local: false
++#     warn_rate: 5.0
++#     error_rate: 1.0
++#     timeout: 1.0
+ 
+-- module: perception
+-  mode: [online, logging_simulation]
+-  type: autonomous
+-  args:
+-    node_name_suffix: traffic_light_recognition_traffic_signals
+-    topic: /perception/traffic_light_recognition/traffic_signals
+-    topic_type: autoware_perception_msgs/msg/TrafficSignalArray
+-    best_effort: false
+-    transient_local: false
+-    warn_rate: 5.0
+-    error_rate: 1.0
+-    timeout: 1.0
++# - module: perception
++#   mode: [online, logging_simulation]
++#   type: autonomous
++#   args:
++#     node_name_suffix: traffic_light_recognition_traffic_signals
++#     topic: /perception/traffic_light_recognition/traffic_signals
++#     topic_type: autoware_perception_msgs/msg/TrafficSignalArray
++#     best_effort: false
++#     transient_local: false
++#     warn_rate: 5.0
++#     error_rate: 1.0
++#     timeout: 1.0
+ 
+ - module: planning
+   mode: [online, logging_simulation, planning_simulation]
+@@ -206,3 +206,16 @@
+     warn_rate: 5.0
+     error_rate: 1.0
+     timeout: 1.0
++    
++- module: sensing/imu
++  mode: [online]
++  type: autonomous
++  args:
++    node_name_suffix: imu_monitor
++    topic: /sensing/imu/imu_raw
++    topic_type: sensor_msgs/msg/Imu
++    best_effort: false
++    transient_local: false
++    warn_rate: 15.0
++    error_rate: 5.0
++    timeout: 0.5
+diff --git a/autoware_launch/config/system/system_error_monitor/diagnostic_aggregator/vehicle.param.yaml b/autoware_launch/config/system/system_error_monitor/diagnostic_aggregator/vehicle.param.yaml
+index e96e3b3..0c5dea0 100644
+--- a/autoware_launch/config/system/system_error_monitor/diagnostic_aggregator/vehicle.param.yaml
++++ b/autoware_launch/config/system/system_error_monitor/diagnostic_aggregator/vehicle.param.yaml
+@@ -1,11 +1,11 @@
+-/**:
+-  ros__parameters:
+-    vehicle:
+-      type: diagnostic_aggregator/AnalyzerGroup
+-      path: vehicle
+-      analyzers:
+-        vehicle_errors:
+-          type: diagnostic_aggregator/GenericAnalyzer
+-          path: vehicle_errors
+-          contains: [": vehicle_errors"]
+-          timeout: 1.0
++# /**:
++#   ros__parameters:
++#     vehicle:
++#       type: diagnostic_aggregator/AnalyzerGroup
++#       path: vehicle
++#       analyzers:
++#         vehicle_errors:
++#           type: diagnostic_aggregator/GenericAnalyzer
++#           path: vehicle_errors
++#           contains: [": vehicle_errors"]
++#           timeout: 1.0
+diff --git a/autoware_launch/launch/autoware.launch.xml b/autoware_launch/launch/autoware.launch.xml
+index 3d713f3..b450e34 100644
+--- a/autoware_launch/launch/autoware.launch.xml
++++ b/autoware_launch/launch/autoware.launch.xml
+@@ -39,7 +39,7 @@
+   <arg name="system_error_monitor_param_path" default="$(find-pkg-share autoware_launch)/config/system/system_error_monitor/system_error_monitor.param.yaml"/>
+   <!-- Tools -->
+   <arg name="rviz" default="true" description="launch rviz"/>
+-  <arg name="rviz_config" default="$(find-pkg-share autoware_launch)/rviz/autoware.rviz" description="rviz config"/>
++  <arg name="rviz_config" default="$(find-pkg-share iino_aw_launch)/rviz/autoware.rviz" description="rviz config"/>
+   <arg name="rviz_respawn" default="true"/>
+   <!-- Perception -->
+   <arg name="perception_mode" default="lidar" description="select perception mode. camera_lidar_radar_fusion, camera_lidar_fusion, lidar_radar_fusion, lidar, radar"/>
+@@ -69,7 +69,7 @@
+       <arg name="sensor_model" value="$(var sensor_model)"/>
+       <arg name="vehicle_id" value="$(var vehicle_id)"/>
+       <arg name="launch_vehicle_interface" value="$(var launch_vehicle_interface)"/>
+-      <arg name="config_dir" value="$(find-pkg-share individual_params)/config/$(var vehicle_id)/$(var sensor_model)"/>
++      <!-- <arg name="config_dir" value="$(find-pkg-share individual_params)/config/$(var vehicle_id)/$(var sensor_model)"/> -->
+       <arg name="raw_vehicle_cmd_converter_param_path" value="$(find-pkg-share autoware_launch)/config/vehicle/raw_vehicle_cmd_converter/raw_vehicle_cmd_converter.param.yaml"/>
+     </include>
+   </group>
+diff --git a/autoware_launch/launch/components/tier4_system_component.launch.xml b/autoware_launch/launch/components/tier4_system_component.launch.xml
+index 9fac31c..d7d227b 100644
+--- a/autoware_launch/launch/components/tier4_system_component.launch.xml
++++ b/autoware_launch/launch/components/tier4_system_component.launch.xml
+@@ -1,7 +1,5 @@
+ <?xml version="1.0"?>
+ <launch>
+-  <arg name="system_error_monitor_param_path" default="$(find-pkg-share autoware_launch)/config/system/system_error_monitor/system_error_monitor.param.yaml"/>
+-
+   <include file="$(find-pkg-share tier4_system_launch)/launch/system.launch.xml">
+     <arg name="run_mode" value="$(var system_run_mode)"/>
+     <arg name="launch_system_monitor" value="$(var launch_system_monitor)"/>
+@@ -13,7 +11,7 @@
+     <arg name="duplicated_node_checker_param_path" value="$(find-pkg-share autoware_launch)/config/system/duplicated_node_checker/duplicated_node_checker.param.yaml"/>
+     <arg name="mrm_comfortable_stop_operator_param_path" value="$(find-pkg-share autoware_launch)/config/system/mrm_comfortable_stop_operator/mrm_comfortable_stop_operator.param.yaml"/>
+     <arg name="mrm_emergency_stop_operator_param_path" value="$(find-pkg-share autoware_launch)/config/system/mrm_emergency_stop_operator/mrm_emergency_stop_operator.param.yaml"/>
+-    <arg name="system_error_monitor_param_path" value="$(var system_error_monitor_param_path)"/>
++    <arg name="system_error_monitor_param_path" value="$(find-pkg-share iino_aw_launch)/config/$(var vehicle_model)/system/system_error_monitor/system_error_monitor.param.yaml"/>
+     <arg name="system_error_monitor_planning_simulator_param_path" value="$(find-pkg-share autoware_launch)/config/system/system_error_monitor/system_error_monitor.planning_simulation.param.yaml"/>
+     <arg name="diagnostic_aggregator_vehicle_param_path" value="$(find-pkg-share autoware_launch)/config/system/system_error_monitor/diagnostic_aggregator/vehicle.param.yaml"/>
+     <arg name="diagnostic_aggregator_system_param_path" value="$(find-pkg-share autoware_launch)/config/system/system_error_monitor/diagnostic_aggregator/system.param.yaml"/>
