@@ -93,8 +93,8 @@
   mode: [online, logging_simulation, planning_simulation]
   type: autonomous
   args:
-    node_name_suffix: scenario_planning_trajectory
-    topic: /planning/scenario_planning/trajectory
+    node_name_suffix: trajectory_reverser
+    topic: /planning/modified_trajectory
     topic_type: autoware_auto_planning_msgs/msg/Trajectory
     best_effort: false
     transient_local: false
@@ -102,18 +102,18 @@
     error_rate: 1.0
     timeout: 1.0
 
-# - module: control
-#   mode: [online, logging_simulation, planning_simulation]
-#   type: autonomous
-#   args:
-#     node_name_suffix: trajectory_follower_control_cmd
-#     topic: /control/trajectory_follower/control_cmd
-#     topic_type: autoware_auto_control_msgs/msg/AckermannControlCommand
-#     best_effort: false
-#     transient_local: false
-#     warn_rate: 5.0
-#     error_rate: 1.0
-#     timeout: 1.0
+- module: control
+  mode: [online, logging_simulation, planning_simulation]
+  type: autonomous
+  args:
+    node_name_suffix: trajectory_follower_control_cmd
+    topic: /control/trajectory_follower/control_cmd
+    topic_type: autoware_auto_control_msgs/msg/AckermannControlCommand
+    best_effort: false
+    transient_local: false
+    warn_rate: 5.0
+    error_rate: 1.0
+    timeout: 1.0
 
 - module: control
   mode: [online, logging_simulation, planning_simulation]
