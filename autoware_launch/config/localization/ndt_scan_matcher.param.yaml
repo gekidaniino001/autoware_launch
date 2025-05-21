@@ -32,7 +32,7 @@
 
     # If converged_param_type is 1
     # Threshold for deciding whether to trust the estimation result
-    converged_param_nearest_voxel_transformation_likelihood: 1.8
+    converged_param_nearest_voxel_transformation_likelihood: 2.0
 
     # The number of particles to estimate initial pose
     initial_estimate_particles_num: 20
@@ -54,12 +54,12 @@
     # Do note that this covariance matrix is empirically derived
     output_pose_covariance:
       [
-        0.0225, 0.0,   0.0,   0.0,      0.0,      0.0,
-        0.0,   0.0225, 0.0,   0.0,      0.0,      0.0,
-        0.0,   0.0,   0.0225, 0.0,      0.0,      0.0,
-        0.0,   0.0,   0.0,   0.000625, 0.0,      0.0,
-        0.0,   0.0,   0.0,   0.0,      0.000625, 0.0,
-        0.0,   0.0,   0.0,   0.0,      0.0,      0.000625,
+        0.1, 0.0,   0.0,   0.0,      0.0,      0.0,
+        0.0,   0.1, 0.0,   0.0,      0.0,      0.0,
+        0.0,   0.0,   0.1, 0.0,      0.0,      0.0,
+        0.0,   0.0,   0.0,   0.01, 0.0,      0.0,
+        0.0,   0.0,   0.0,   0.0,      0.01, 0.0,
+        0.0,   0.0,   0.0,   0.0,      0.0,      0.01,
       ]
 
     # Regularization switch
