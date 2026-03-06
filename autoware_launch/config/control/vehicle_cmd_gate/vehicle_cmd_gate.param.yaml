@@ -9,14 +9,14 @@
     emergency_acceleration: -2.4
     stopped_state_entry_duration_time: 0.1
     nominal:
-      vel_lim: 5.0
+      vel_lim: 7.0
       lon_acc_lim: 3.0
       lon_jerk_lim: 3.0
       lat_acc_lim: 3.0
       lat_jerk_lim: 3.0
       actual_steer_diff_lim: 1.0
     on_transition:
-      vel_lim: 5.0
+      vel_lim: 7.0
       lon_acc_lim: 1.0
       lon_jerk_lim: 0.5
       lat_acc_lim: 2.0
